@@ -45,8 +45,16 @@ handleFind = (value) => {
   changeCategory = (event) => {
     event.persist();
     BooksAPI.get(event.target.name).then((book) => {
-      BooksAPI.update(book, event.target.value)
-      this.getBooks();
+      BooksAPI.update(book, event.target.value).then((ids) => {
+        const {currentlyReading, wantToRead, read} = ids;
+        const currentBooks = this.state.books.filter( temp => currentlyReading.includes(temp.id)).map(book => Object.assign({}, book, { shelf: "currentlyReading" }));
+        const wantBooks = this.state.books.filter( temp => wantToRead.includes(temp.id)).map(book => Object.assign({}, book, { shelf: "wantToRead" }));
+        const readBooks = this.state.books.filter( temp => read.includes(temp.id)).map(book => Object.assign({}, book, { shelf: "read" }));
+        const newBooks = [...currentBooks, ...wantBooks, ...readBooks];
+        this.setState({
+          books: newBooks
+        })
+      })
     })
   }
 

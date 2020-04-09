@@ -3,8 +3,9 @@ import {Link} from 'react-router-dom'
 import * as BooksAPI from './BooksAPI'
 
 class SearchBook extends Component{
-    componentDidMount(){
-      this.props.clearBooks();
+    
+    state = {
+      value: ''
     }
   
     componentWillUnmount(){
@@ -12,6 +13,7 @@ class SearchBook extends Component{
   	}
   
    findBook = (query) => {
+      this.setState({value:query})
       BooksAPI.search(query).then((book) => {
         if(!Array.isArray(book)  || query === ""){
           this.props.clearBooks();
@@ -19,6 +21,7 @@ class SearchBook extends Component{
         else{
          this.props.handleFind(book)
         }
+
       })
    }
 
@@ -45,18 +48,18 @@ class SearchBook extends Component{
                   However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
                   you don't find a specific author or title. Every search is limited by search terms.
                 */}
-                <input type="text" onChange={(event) => this.findBook(event.target.value)}  placeholder="Search by title or author"/>
+                <input type="text" value={this.state.value} onChange={(event) => this.findBook(event.target.value)}  placeholder="Search by title or author"/>
 
               </div>
             </div>
             <div className="search-books-results">
               <ol className="books-grid">
-
+       {/* {this.state.value !== "" && ( */}
 				{showBooks.filter( book => book.authors && book.imageLinks["thumbnail"]).map((book) => 
                   <li key={book.id}>
                         <div className="book">
                           <div className="book-top">
-                            <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks["thumbnail"]})` }}></div>
+                            <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks["thumbnail"] || ""})` }}></div>
                             <div className="book-shelf-changer">
                               <select name={book.id} onChange={this.changeSelect} defaultValue={book.shelf ? book.shelf : "none"}>
                                 <option value="move" disabled>Move to...</option>
@@ -69,11 +72,12 @@ class SearchBook extends Component{
                           </div>
                           <div className="book-title">{book.title}</div>
                           <div className="book-authors">
-							{book.authors.map(author => <span key={author}>{author},</span> )}
+							{book.authors.map(author => <span key={author}>{author},</span> ) || ""}
 						</div>
                         </div>
                       </li>
                 )}
+              {/* )} */}
 				</ol>
             </div>
           </div>
