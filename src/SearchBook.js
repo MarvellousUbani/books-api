@@ -1,40 +1,40 @@
 import React, {Component} from 'react'
 import {Link} from 'react-router-dom'
 import * as BooksAPI from './BooksAPI'
+import Book from './Book'
 
 class SearchBook extends Component{
-    
+
     state = {
-      value: ''
+      show: false
     }
+    
+      componentWillUnmount(){
+        this.props.getBooks();
+      }
+    
+     findBook = (query) => {
+        BooksAPI.search(query).then((book) => {
+          if(!Array.isArray(book)  || query === ""){
+            this.setState({show:false})
+          }
+          else{
+           this.setState({show:true})
+           this.props.handleFind(book)
+          }
+        })
+     }
   
-    componentWillUnmount(){
-   	 this.props.getBooks();
-  	}
-  
-   findBook = (query) => {
-      this.setState({value:query})
-      BooksAPI.search(query).then((book) => {
-        if(!Array.isArray(book)  || query === ""){
-          this.props.clearBooks();
-        }
-        else{
-         this.props.handleFind(book)
-        }
-
-      })
-   }
-
-    changeSelect = (event) => {
-      event.persist();
-      BooksAPI.get(event.target.name).then((book) => {
-        BooksAPI.update(book, event.target.value)
-      })
-    }
+      changeSelect = (event) => {
+        event.persist();
+        BooksAPI.get(event.target.name).then((book) => {
+          BooksAPI.update(book, event.target.value)
+        })
+      }
   
   render(){
 	const {showBooks} = this.props
-    
+  const {show} = this.state
     return(
       <div className="search-books">
             <div className="search-books-bar">
@@ -48,36 +48,17 @@ class SearchBook extends Component{
                   However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
                   you don't find a specific author or title. Every search is limited by search terms.
                 */}
-                <input type="text" value={this.state.value} onChange={(event) => this.findBook(event.target.value)}  placeholder="Search by title or author"/>
+                <input type="text" onChange={(event) => this.findBook(event.target.value)}  placeholder="Search by title or author"/>
 
               </div>
             </div>
             <div className="search-books-results">
               <ol className="books-grid">
-       {/* {this.state.value !== "" && ( */}
-				{showBooks.filter( book => book.authors && book.imageLinks["thumbnail"]).map((book) => 
-                  <li key={book.id}>
-                        <div className="book">
-                          <div className="book-top">
-                            <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks["thumbnail"] || ""})` }}></div>
-                            <div className="book-shelf-changer">
-                              <select name={book.id} onChange={this.changeSelect} defaultValue={book.shelf ? book.shelf : "none"}>
-                                <option value="move" disabled>Move to...</option>
-                                <option value="currentlyReading">Currently Reading</option>
-                                <option value="wantToRead">Want to Read</option>
-                                <option value="read">Read</option>
-                                <option value="none">None</option>
-                              </select>
-                            </div>
-                          </div>
-                          <div className="book-title">{book.title}</div>
-                          <div className="book-authors">
-							{book.authors.map(author => <span key={author}>{author},</span> ) || ""}
-						</div>
-                        </div>
-                      </li>
-                )}
-              {/* )} */}
+          {show === true && (     
+            showBooks.filter( book => book.authors && book.imageLinks && book.imageLinks["thumbnail"]).map(({id, ...otherItemProps}) => 
+                <Book key={id}{...otherItemProps} id={id} changeSelect={this.changeSelect}/>
+                )
+            )}
 				</ol>
             </div>
           </div>

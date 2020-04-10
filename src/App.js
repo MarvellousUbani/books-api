@@ -14,6 +14,7 @@ class BooksApp extends React.Component {
      * pages, as well as provide a good URL they can bookmark and share.
      */
     books:[],
+    staticBooks:[]
   }
 
   componentDidMount(){
@@ -29,16 +30,29 @@ class BooksApp extends React.Component {
   getBooks = () => {
     BooksAPI.getAll().then((books) => {
       this.setState(() => ({
-        books
+        books:books,
+        staticBooks:books
       }))
     })
   }
 
+  convertArrayToObject = (array, key) => { 
+    const initialValue = {}; return array.reduce((obj, item) => 
+    { return { ...obj, [item[key]]: item, }; }, initialValue); 
+  };
+
  
-handleFind = (value) => {
+handleFind = (searchedBooks) => {
+  const existingBooksObj = this.convertArrayToObject(this.state.staticBooks, "title")
+  searchedBooks.forEach( item => {
+    if(existingBooksObj[item.title] !== undefined){console.log(existingBooksObj[item.title].shelf); item["shelf"] = existingBooksObj[item.title].shelf}
+  });
+
   this.setState(() => ({
-    books:value
+    books:searchedBooks
   }))
+
+  console.log(this.state.books)
 }
 
 
