@@ -1,16 +1,38 @@
-# MyReads Project
+### MyReads Project
+> Features: search for books, move books around categories, add new / remove old books
 
-This is the final assessment project for Udacity's React Fundamentals course for the Udacity Nanodegree. 
+![Booksearch](https://user-images.githubusercontent.com/17970203/82270749-b24b8480-996d-11ea-8090-3294dc811d2c.png)
 
-## Running the App
+## Description:
+A simple book search app built with react
 
-To get the app up and running:
+## Built With
+- React
+- Javascript
+- HTML/CSS(Flexbox)
 
-* Clone this repository to your local device
-* Install all project dependencies with `npm install`
-* Start the development server with `npm start`
-* The app should be live on http://localhost:3000/
+## Live Demo
+[Click Here](#)
+
+## How to Run the App Locally
+```
+   git clone https://github.com/MarvellousUbani/books-api.git
+   cd books-api
+   npm install
+   npm start
+
+```
+
+## Authors:
+👤 Marvellous Michaels
+
+[Github  Link](https://github.com/MarvellousUbani)
+
+## 🤝 Contributing
+Contributions, issues and feature requests are welcome!
+
+Feel free to check the issues page.
 
 
-## Author
-[Marvellous Michaels](https://github.com/MarvellousUbani)
+Give a ⭐️ if you like this project!
+
