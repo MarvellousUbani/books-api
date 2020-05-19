@@ -12,7 +12,7 @@ A simple book search app built with react
 - HTML/CSS(Flexbox)
 
 ## Live Demo
-[Click Here](#)
+[Click Here](https://searchablebooks.netlify.app)
 
 ## How to Run the App Locally
 ```
